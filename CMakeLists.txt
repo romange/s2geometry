@@ -26,7 +26,7 @@ option(BUILD_EXAMPLES "Build s2 documentation examples." ON)
 feature_summary(WHAT ALL)
 
 if (WITH_GLOG)
-    find_package(Glog REQUIRED)
+    find_package(Glog CONFIG REQUIRED)
     # FindGFlags.cmake and FindGlog.cmake do not seem to implement REQUIRED;
     # check manually.
     if (NOT ${GLOG_FOUND})
@@ -39,7 +39,7 @@ else()
 endif()
 
 if (WITH_GFLAGS)
-    find_package(GFlags REQUIRED)
+    find_package(GFlags CONFIG REQUIRED)
     if (NOT ${GFLAGS_FOUND})
         message(FATAL_ERROR "GFlags requested but not found")
     endif()
@@ -199,9 +199,11 @@ add_library(s2testing STATIC
             src/s2/s2builderutil_testing.cc
             src/s2/s2shapeutil_testing.cc
             src/s2/s2testing.cc)
+target_link_libraries(s2testing glog::glog)
+
 target_link_libraries(
     s2
-    ${GFLAGS_LIBRARIES} ${GLOG_LIBRARIES} ${OPENSSL_LIBRARIES}
+    gflags glog::glog ${OPENSSL_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT})
 
 # Allow other CMake projects to use this one with:
