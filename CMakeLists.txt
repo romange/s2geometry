@@ -195,11 +195,6 @@ add_library(s2
             src/s2/util/math/exactfloat/exactfloat.cc
             src/s2/util/math/mathutil.cc
             src/s2/util/units/length-units.cc)
-add_library(s2testing STATIC
-            src/s2/s2builderutil_testing.cc
-            src/s2/s2shapeutil_testing.cc
-            src/s2/s2testing.cc)
-target_link_libraries(s2testing glog::glog)
 
 target_link_libraries(
     s2
@@ -412,6 +407,13 @@ if (GTEST_ROOT)
   add_subdirectory(${GTEST_ROOT} build_gtest)
   include_directories(${GTEST_ROOT}/include)
 
+  add_library(s2testing STATIC
+            src/s2/s2builderutil_testing.cc
+            src/s2/s2shapeutil_testing.cc
+            src/s2/s2testing.cc)
+  target_link_libraries(s2testing glog::glog)
+
+
   set(S2TestFiles
       src/s2/encoded_s2cell_id_vector_test.cc
       src/s2/encoded_s2point_vector_test.cc
@@ -522,6 +524,8 @@ if (GTEST_ROOT)
         s2testing s2 gtest_main)
     add_test(${test} ${test})
   endforeach()
+else()
+ set(BUILD_EXAMPLES Off)  # Requires s2testing
 endif()
 
 if (BUILD_EXAMPLES)
